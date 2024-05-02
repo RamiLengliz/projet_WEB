@@ -55,6 +55,11 @@ $classS = new ClassCon("class");
                         <div class="invalid-feedback">Please enter a valid date.</div>
                     </div>
                     <div class="form-group">
+                        <label for="date"><b>Time (00:00)</b></label>
+                        <input type="text" class="form-control" placeholder="Enter Time" name="time" id="date" required>
+                        <div class="invalid-feedback">Please enter a valid date.</div>
+                    </div>
+                    <div class="form-group">
                         <label for="subject"><b>Subject</b></label>
                         <select class="form-select" name="id_subject" id="id_subject" required>
                             <option value="">Select Subject</option>
@@ -81,6 +86,22 @@ $classS = new ClassCon("class");
                 </form>
 
             </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const form = document.getElementById('form');
+                    const titleInput = document.getElementById('exampleInputName1');
+
+                    form.addEventListener('submit', function(event) {
+                        const titleValue = titleInput.value;
+                        // Check if title contains numbers
+                        if (/\d/.test(titleValue)) {
+                            alert("Title should not contain numbers.");
+                            titleInput.classList.add('is-invalid');
+                            event.preventDefault(); // Prevent form from submitting
+                        }
+                    });
+                });
+            </script>
 
             <div class="col-md-12" style="padding-top:20px;">
                 <table class="table table-hover">
