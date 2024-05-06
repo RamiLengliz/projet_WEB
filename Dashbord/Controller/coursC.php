@@ -1,6 +1,7 @@
 <?php
 include ("C:/xampp/htdocs/GestionSubjectCours/Dashbord/config.php");
 include("C:/xampp/htdocs/GestionSubjectCours/Dashbord/Model/cours.php");
+include("C:/xampp/htdocs/GestionSubjectCours/Dashbord/Model/subject.php");
 
 class coursC {
     function ajouterCours($cours){
@@ -18,6 +19,17 @@ class coursC {
             ]);
         } catch (Exception $e) {
             echo 'Erreur: ' . $e->getMessage();
+        }
+    }
+    function displayCours(){
+        $sql = "SELECT * FROM cours";
+        $conn = new Config();
+        $db = $conn->getConnexion();
+        try {
+            $list = $db->query($sql);
+            return $list;
+        } catch (PDOException $e) {
+            die('Error: ' . $e->getMessage());
         }
     }
 
@@ -84,6 +96,19 @@ class coursC {
             echo $query->rowCount() . " records updated successfully <br>";
         } catch (PDOException $e) {
             echo 'Error: ' . $e->getMessage();
+        }
+    }
+    
+    public function getAllSubjects() {
+        $sql = "SELECT id, name FROM subject"; // Define the SQL query
+    
+        $conn = new Config();
+        $db = $conn->getConnexion();
+        try {
+            $list = $db->query($sql); // Use the correct variable $sql here
+            return $list;
+        } catch (PDOException $e) {
+            die('Error: ' . $e->getMessage());
         }
     }
     

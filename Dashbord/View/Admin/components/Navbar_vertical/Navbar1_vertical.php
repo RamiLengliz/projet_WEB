@@ -73,14 +73,14 @@
             <li class="sidebar-item">
                 <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse" data-bs-target="#auth" aria-expanded="false" aria-controls="auth">
                     <i class="lni lni-protection"></i>
-                    <span>Warnings</span>
+                    <span>Courses</span>
                 </a>
                 <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                     <li class="sidebar-item">
-                        <a href="#" class="sidebar-link">Add Warning</a>
+                        <a href="addCourses.php" class="sidebar-link">Add Course</a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="#" class="sidebar-link">Check Warnings</a>
+                        <a href="listCours.php" class="sidebar-link">List Cours</a>
                     </li>
                 </ul>
             </li>

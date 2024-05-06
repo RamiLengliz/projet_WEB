@@ -231,6 +231,7 @@ if (isset($_GET['idSubject'])) {
                             <i class="fas fa-star"></i>
                             <span class="d-inline-block average-rating"><span>4.0</span> (15)</span>
                         </div>
+    <?php echo '<td><a href="generatePDF.php?id=' . $cours['idCours'] . '&name=' . urlencode($cours['nomCours']) . '&image=' . urlencode($cours['ressourceCours']) . '" class="btn btn-primary">Generate PDF</a></td>'?>
                                         
 
                     </div>

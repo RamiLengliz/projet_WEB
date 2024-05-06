@@ -190,6 +190,11 @@ if(isset($_POST['subbmit']))
 						<div class="section-sub-head">
 							<span>What’s New</span>
 							<h2>Our Subjects</h2>
+							<!-- Add this code inside the section where you want to place the search field -->
+<div class="section-text aos" data-aos="fade-up">
+    <input type="text" id="searchInput" placeholder="Search subjects...">
+</div>
+
 						</div>
 					
 					</div>
@@ -241,6 +246,28 @@ if(isset($_POST['subbmit']))
     </div>
 </div>
 <?php endforeach; ?>
+<script>
+    // Get the input field and subjects list
+    const searchInput = document.getElementById('searchInput');
+    const subjectsList = document.querySelectorAll('.course-feature');
+
+    // Add event listener to the search input field
+    searchInput.addEventListener('input', function() {
+        const searchText = this.value.toLowerCase(); // Get the search query and convert to lowercase
+
+        subjectsList.forEach(subject => {
+            const subjectName = subject.querySelector('.course-name h4 a').innerText.toLowerCase(); // Get the subject name and convert to lowercase
+
+            // Check if the subject name contains the search query
+            if (subjectName.includes(searchText)) {
+                subject.style.display = 'block'; // Show the subject if it matches the search query
+            } else {
+                subject.style.display = 'none'; // Hide the subject if it doesn't match the search query
+            }
+        });
+    });
+</script>
+
 
 						</div>
 					</div>

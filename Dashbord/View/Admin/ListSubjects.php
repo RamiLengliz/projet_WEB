@@ -36,6 +36,13 @@ if(isset($_POST['subbmit']))
         ?>
    <div class="col-md-12" style="padding-top:20px;">
         <a href="addSubject.php" class="btn btn-primary">Add New Subject</a>
+        <form method="get" action="listSubjects.php">
+            <input type="text" name="search" placeholder="Search by course name">
+            <button type="submit">Search</button>
+        </form>
+        <form method="get" action="listSubjects.php">
+            <button type="submit" name="sort" value="asc">Sort A-Z</button>
+        </form>
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -44,19 +51,55 @@ if(isset($_POST['subbmit']))
                     <th scope="col">DESCRIPTION</th>
                     <th scope="col">FILE DEPOT</th>
                     <th scope="col">Courses</th>
+                    <th scope="col">Stats</th>
                     <th scope="col">Add </th>
                     <th scope="col">EDIT</th>
                     <th scope="col">DELETE</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($listeSubject as $subject) : ?>
+                <?php 
+    $search = $_GET['search'] ?? '';
+    $sortOrder = $_GET['sort'] ?? '';
+    $db = new config();
+    $conn = $db->getConnexion();
+        
+    // Start with a base SQL query that also joins the courses table to count courses
+    $sql = "SELECT subject.*, COUNT(cours.idSubject) AS courseCount FROM subject
+            LEFT JOIN cours ON subject.Id = cours.idSubject
+            GROUP BY subject.Id";
+        
+    // Append conditions for search
+    if (!empty($search)) {
+        $sql .= " WHERE subject.name LIKE :searchTerm";
+        $stmt = $conn->prepare($sql);
+    }
+    
+    // Append sorting condition
+    if (!empty($sortOrder) && $sortOrder === 'asc') {
+        $sql .= " ORDER BY subject.name ASC";
+        $stmt = $conn->query($sql);
+    }
+    $stmt = $conn->prepare($sql);
+    
+    // Prepare and execute the SQL query
+    if (!empty($search)) {
+        $stmt->execute(['searchTerm' => '%' . $search . '%']);
+    } else {
+        $stmt->execute();
+    }
+    
+    // Fetch all subjects along with their course count
+    $listeSubject = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                foreach ($listeSubject as $subject) : ?>
                     <tr>
                         <th scope="row"><?= $subject['Id'] ?></th>
                         <td><?= $subject['name'] ?></td>
                         <td><?= $subject['subject_description'] ?></td>
                         <td><img src="<?= $subject['depot_fichier_subject'] ?>" alt="Subject Image" style="max-width: 100px;"></td>
                         <td><a href="showCourses.php?idSubject=<?= $subject['Id'] ?>" class="btn btn-primary">Courses</a></td>
+                        <td><?= $subject['courseCount'] ?> courses</td>
                         <td><a href="addCours.php?idSubject=<?= $subject['Id'] ?>" class="btn btn-primary">Add Courses</a></td>
                         <td><a href="editSubject.php?id=<?= $subject['Id'] ?>" class="btn btn-primary">Edit</a></td>
                         <td>
