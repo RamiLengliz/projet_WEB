@@ -69,7 +69,7 @@ $classS = new ClassCon("class");
                                 <td><?= htmlspecialchars($subject_name['name'] ? $subject_name['name'] : 'Unknown Class'); ?></td> <!-- Assuming you have similar logic for subjects -->
                                 <td><?= htmlspecialchars($class_name ? $class_name : 'Unknown Class'); ?></td>
                                 <td>
-                                    <form action="index.php?page=choix_class" method="POST">
+                                    <form action="index.php?page=choix_class" method="POST" id="gradeForm">
                                         <input type="hidden" name="id_examen" value="<?= htmlspecialchars($examen['id']); ?>">
                                         <button class="btn btn-primary" type="submit">Donner les notes des etudiants</button>
                                     </form>
@@ -84,3 +84,15 @@ $classS = new ClassCon("class");
         </div>
     </div>
 </main>
+<script>
+        document.getElementById('gradeForm').onsubmit = function(event) {
+            const gradeInput = document.getElementById('student_grade');
+            const grade = gradeInput.value;
+
+            // Check if the grade is within the allowed range
+            if (grade < 0 || grade > 20) {
+                alert('Grade must be between 0 and 20.');
+                event.preventDefault(); // Prevent form submission
+            }
+        };
+    </script>

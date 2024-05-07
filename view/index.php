@@ -38,10 +38,10 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
             case 'list_etudiants';
                 include 'list_etudiants.php';
                 break;
-                case 'resultat_update';
+            case 'resultat_update';
                 include 'resultat_update.php';
                 break;
-                case 'list_etudiant_update';
+            case 'list_etudiant_update';
                 include 'list_etudiant_update.php';
                 break;
 

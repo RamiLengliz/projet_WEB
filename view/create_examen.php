@@ -36,6 +36,9 @@ $classS = new ClassCon("class");
                     case '4':
                         echo '<div class="alert alert-warning" role="alert">Examen already exists.!</div>';
                         break;
+                    case '5':
+                        echo '<div class="alert alert-warning" role="alert">The Email sended to all the Users. !</div>';
+                        break;
                     default:
                         echo '<div class="alert alert-primary" role="alert">Fill in the form to add an examen!</div>';
                         break;
@@ -50,9 +53,9 @@ $classS = new ClassCon("class");
                         <div class="invalid-feedback">Title should not contain numbers.</div>
                     </div>
                     <div class="form-group">
-                        <label for="date"><b>Date</b></label>
-                        <input type="date" class="form-control" placeholder="Enter Date" name="date" id="date" required>
-                        <div class="invalid-feedback">Please enter a valid date.</div>
+                        <label for="datetime"><b>Date & Time</b></label>
+                        <input type="datetime-local" class="form-control" placeholder="Enter Date & Time" name="datetime" id="datetime" required>
+                        <div class="invalid-feedback">Please enter a valid date and time.</div>
                     </div>
                     <div class="form-group">
                         <label for="subject"><b>Subject</b></label>
@@ -79,8 +82,64 @@ $classS = new ClassCon("class");
                         <button type="submit" class="btn btn-primary btn-lg font-weight-medium w-100 auth-form-btn">Submit</button>
                     </div>
                 </form>
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <button type="submit" onclick="sendEmail()" class="btn btn-warning btn-lg w-100 mb-3">
+                            Send Timetable to the Student via Email
+                        </button>
+                        <p id="status" class="text-center"></p>
+                    </div>
+                </div>
+
+                <script>
+                    function sendEmail() {
+                        document.getElementById("status").innerHTML = "Sending emails...";
+                        const xhr = new XMLHttpRequest();
+                        xhr.open("GET", "../model/examen_pdf.php", true);
+                        xhr.onreadystatechange = function() {
+                            if (xhr.readyState === 4 && xhr.status === 200) {
+                                alert("Emails sent successfully!");
+                                location.reload(); // Refresh the page
+                            }
+                        };
+                        xhr.send();
+                    }
+                </script>
 
             </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const form = document.querySelector('form');
+                    const titleInput = document.getElementById('exampleInputName1');
+                    const datetimeInput = document.getElementById('datetime');
+
+                    form.addEventListener('submit', function(event) {
+                        const titleValue = titleInput.value;
+                        const datetimeValue = datetimeInput.value;
+                        let valid = true;
+
+                        // Check if title contains numbers
+                        if (/\d/.test(titleValue)) {
+                            alert("Title should not contain numbers.");
+                            titleInput.classList.add('is-invalid');
+                            valid = false;
+                        }
+
+                        // Check if datetime is in the correct format (YYYY-MM-DDTHH:MM)
+                        if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(datetimeValue)) {
+                            alert("Please enter a valid datetime in the format YYYY-MM-DDTHH:MM.");
+                            datetimeInput.classList.add('is-invalid');
+                            valid = false;
+                        }
+
+                        if (!valid) {
+                            event.preventDefault(); // Prevent form from submitting
+                        }
+                    });
+                });
+            </script>
+
+
 
             <div class="col-md-12" style="padding-top:20px;">
                 <table class="table table-hover">
