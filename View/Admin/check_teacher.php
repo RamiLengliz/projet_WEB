@@ -48,89 +48,104 @@ $pdo = config::getConnexion();
                             <th scope="col">First</th>
                             <th scope="col">Last</th>
                             <th scope="col">Email</th>
-                            <th scope="col">status</th>
                             <th scope="col">Age</th>
                             <th scope="col">Subject</th>
-                            <th scope="col">EDIT</th>
-                            <th scope="col">DELETE</th>
+                            <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-
-
                         try {
                             $pdo = config::getConnexion();
-                            // Assuming 'etudiants' is a typo and the correct table name is 'student'
-                            // Adjust table and column names as necessary to fit your schema
-                            $query = "
-                        SELECT 
-                            u.id, u.name, u.lastname, u.email, u.age, u.status, c.name AS subject_name
-                        FROM 
-                            user u
-                        LEFT JOIN 
-                            enseignant s ON u.id = s.id_user
-                        LEFT JOIN 
-                            subject c ON s.id_subject = c.id
-                        WHERE 
-                            u.role = 2
-                    ";
-                            $stmt = $pdo->query($query);
+                            $query = "SELECT u.id, u.name, u.lastname, u.email, u.age, u.status, c.name AS subject_name
+                      FROM user u
+                      LEFT JOIN enseignant s ON u.id = s.id_user
+                      LEFT JOIN subject c ON s.id_subject = c.id
+                      WHERE u.role = 2";
+                            $stmt = $pdo->prepare($query);
+                            $stmt->execute();
 
                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                echo "<tr>";
-                                echo "<th scope='row'>" . htmlspecialchars($row['id']) . "</th>";
-                                echo "<td>" . htmlspecialchars($row['name']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['lastname']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['email']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['status']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['age']) . "</td>";
-                                // Directly use the joined class name
-                                echo "<td>" . htmlspecialchars($row['subject_name']) . "</td>";
-                                echo '<td><a href="../../View/admin/index.php?id=' . $row['id'] . '&page=UT" class="btn btn-primary">EDIT</a></td>';
-                                echo '  <td>
-                                <form action="../../model/delete.php" method="POST" onsubmit="return confirm(\'Are you sure?\');">
-                                <input type="hidden" name="url" value="' . htmlspecialchars($page) . '">    
-                                <input type="hidden" name="type" value="user">
-                                    <input type="hidden" name="id" value="' . htmlspecialchars($row['id']) . '">
-                                    <input class="btn btn-danger" type="submit" value="DELETE">
-                                </form>
-                                        </td>';
+                        ?>
+                                <tr>
+                                    <th scope='row'><?= htmlspecialchars($row['id']) ?></th>
+                                    <td><?= htmlspecialchars($row['name']) ?></td>
+                                    <td><?= htmlspecialchars($row['lastname']) ?></td>
+                                    <td><?= htmlspecialchars($row['email']) ?></td>
+                                    <td><?= htmlspecialchars($row['age']) ?></td>
+                                    <td><?= htmlspecialchars($row['subject_name']) ?></td>
+                                    <td>
+                                        <a href="../../View/admin/index.php?id=<?= $row['id'] ?>&page=UT" class="btn btn-primary">EDIT</a>
+                                        <form action="../../model/delete.php" method="POST" onsubmit="return confirm('Are you sure?');">
+                                            <input type="hidden" name="url" value="<?= htmlspecialchars($page) ?>">
+                                            <input type="hidden" name="type" value="user">
+                                            <input type="hidden" name="id" value="<?= htmlspecialchars($row['id']) ?>">
+                                            <button class="btn btn-danger" type="submit">DELETE</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="banCheckbox_<?= htmlspecialchars($row['id']) ?>" <?= ($row['status'] == 1) ? '' : 'checked' ?>>
+                                            <label class="form-check-label" for="banCheckbox_<?= htmlspecialchars($row['id']) ?>">You can activate or disable an account</label>
+                                        </div>
 
-                                echo "</tr>";
+                                        <script>
+                                            // Add event listener to checkbox
+                                            document.getElementById('banCheckbox_<?= htmlspecialchars($row['id']) ?>').addEventListener('click', function() {
+                                                console.log(1);
+
+                                                var userId = <?= $row['id'] ?>;
+                                                var isChecked = this.checked ? 1 : 0; // Convert boolean to integer
+
+                                                // Send AJAX request
+                                                var xhr = new XMLHttpRequest();
+                                                xhr.open('POST', '../../model/update_status.php');
+                                                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                                                xhr.onload = function() {
+                                                    if (xhr.status === 200) {
+                                                        // Success, do something if needed
+                                                    }
+                                                };
+                                                xhr.send('userId=' + userId + '&isChecked=' + isChecked);
+                                            });
+                                        </script>
+                                    </td>
+                                </tr>
+                        <?php
                             }
                         } catch (PDOException $e) {
-                            die("Could not connect to the database :" . $e->getMessage());
+                            die("Could not connect to the database: " . $e->getMessage());
                         }
                         ?>
                     </tbody>
                 </table>
+
             </div>
         </div>
     </div>
 </main>
 
 <script>
-function searchTable() {
-    var input, filter, table, tr, td, i, txtValue;
-    input = document.getElementById("searchInput");
-    filter = input.value.toUpperCase();
-    table = document.querySelector(".table-hover");
-    tr = table.getElementsByTagName("tr");
+    function searchTable() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        table = document.querySelector(".table-hover");
+        tr = table.getElementsByTagName("tr");
 
-    for (i = 1; i < tr.length; i++) { // Start from 1 to skip the table header
-        // Search in second (First Name), third (Last Name), and fourth (Email) columns
-        tr[i].style.display = "none"; // Hide all rows initially
-        for (var j = 1; j <= 3; j++) { // Check columns 1 to 3 (0-indexed, so 1, 2, 3)
-            td = tr[i].getElementsByTagName("td")[j-1]; // j-1 because td index is 0-based
-            if (td) {
-                txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = ""; // Show row if match is found
-                    break; // Stop loop if a matching value is found
+        for (i = 1; i < tr.length; i++) { // Start from 1 to skip the table header
+            // Search in second (First Name), third (Last Name), and fourth (Email) columns
+            tr[i].style.display = "none"; // Hide all rows initially
+            for (var j = 1; j <= 3; j++) { // Check columns 1 to 3 (0-indexed, so 1, 2, 3)
+                td = tr[i].getElementsByTagName("td")[j - 1]; // j-1 because td index is 0-based
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = ""; // Show row if match is found
+                        break; // Stop loop if a matching value is found
+                    }
                 }
             }
         }
     }
-}
 </script>

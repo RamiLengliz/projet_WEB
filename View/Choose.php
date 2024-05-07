@@ -1,6 +1,6 @@
 <?php
 
-
+$email = $_POST['email'];
 $page = isset($_GET['failed']) ? $_GET['failed'] : null;
 ?>
 <!doctype html>
@@ -19,7 +19,7 @@ $page = isset($_GET['failed']) ? $_GET['failed'] : null;
 
 <body>
   <div class="container-fluid">
-    <form class="mx-auto" method="POST" action="choose.php">
+    <form class="mx-auto" method="POST" action="../model/recover.php">
       <div class="row">
         <div class="col text-center">
           <img src="components/images/proschool-logo.png" width="260" alt="">
@@ -36,18 +36,17 @@ $page = isset($_GET['failed']) ? $_GET['failed'] : null;
         echo '<div class="alert alert-danger" role="alert">Email and password are required.. !!</div>';
       } elseif ($page == '4') {
         echo '<div class="alert alert-danger" role="alert">Error Occured.. !!</div>';
+      } elseif ($page == '5') {
+        echo '<div class="alert alert-success" role="alert">Password changed successfully.</div>';
       }
-     elseif ($page == '5') {
-      echo '<div class="alert alert-success" role="alert">Password changed successfully.</div>';
-    }
       ?>
-      <div class="mb-3 mt-5">
-        <label for="exampleInputEmail1" class="form-label">Email</label>
-        <input name="email" type="email" class="form-control" placeholder="Enter your Email to reset your Password" id="exampleInputEmail1" required aria-describedby="emailHelp">
-      </div>
-
-
-      <button type="submit" class="btn btn-primary mt-5">Choose verification method</button>
+      <select class="form-select" name="method" multiple aria-label="multiple select example">
+        <option selected>Open this select menu</option>
+        <option value="1">Phone number(SMS)</option>
+        <option value="2">EMAIL</option>
+      </select>
+      <input type="hidden" name="email" value="<?php echo $email; ?>" >
+      <button type="submit" class="btn btn-primary mt-5">send a code 6-digits</button>
     </form>
   </div>
 
