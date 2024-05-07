@@ -1,8 +1,12 @@
 <?php
-include '../../../../Controller/reclamation_con.php';
-include '../../../../Controller/subject_con.php';
+include '../../Controller/reclamation_con.php';
+include '../../Controller/subject_con.php';
+include '../../Controller/user_con.php';
 $reclamationC = new reclamationCon("reclamation");
 $reclamations = $reclamationC->listReclamations();
+
+$userC = new UserCon("user");
+$users = $userC->listUsers();
 
 $subjectC = new subjectCon("subject");
 $subjects = $subjectC->listsubjects();
@@ -33,12 +37,23 @@ $result = isset($_GET['result']) ? $_GET['result'] : null;
                 }
                 ?>
 
-                <form action="../../../../Model/create_reclamation.php" method="post" style="max-width: 100rem; padding: 20px; margin-bottom: 20px; border: 1px solid #ccc; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                <form action="../../Model/create_reclamation.php" method="post" style="max-width: 100rem; padding: 20px; margin-bottom: 20px; border: 1px solid #ccc; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
                     <h5>Add New Reclamation</h5>
+                    <div class="form-group">
+                        <label for="Id"><b>Id_user</b></label>
+                        <select class="form-select" id="classSelect" name="id_user" required>
+                            <option selected disabled value="">Choose...</option>
+                            <?php foreach ($users as $user) : ?>
+                                <option value="<?= htmlspecialchars($user['Id']); ?>"><?= htmlspecialchars($user['Id']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
                     <div class="form-group">
                         <label for="type"><b>Type</b></label>
                         <input type="text" class="form-control" placeholder="Enter Type" name="type" id="type" required>
                     </div>
+
                     <div class="form-group">
                         <label for="subject"><b>Subject</b></label>
                         <select class="form-select" id="classSelect" name="subject" required>
@@ -47,17 +62,41 @@ $result = isset($_GET['result']) ? $_GET['result'] : null;
                                 <option value="<?= htmlspecialchars($subject['Id']); ?>"><?= htmlspecialchars($subject['name']); ?></option>
                             <?php endforeach; ?>
                         </select>
-
                     </div>
+
                     <div class="form-group">
                         <label for="description"><b>Description</b></label>
-                        <textarea class="form-control" placeholder="Enter Description" name="description" id="description" required></textarea>
+                        <textarea class="form-control" placeholder="Enter Description" name="description" id="description" maxlength="50" required></textarea>
                     </div>
                     <br>
                     <div class="form-group">
                         <input type="submit" class="btn btn-primary" value="Submit">
                     </div>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const typeInput = document.getElementById('type');
+
+                            typeInput.addEventListener('input', function() {
+                                const pattern = /\d/;
+                                if (pattern.test(typeInput.value)) {
+                                    alert('Title should not contain numbers');
+                                    typeInput.value = typeInput.value.replace(/\d/g, '');
+                                }
+                            });
+
+                            const descriptionInput = document.getElementById('description');
+                            descriptionInput.addEventListener('input', function() {
+                                const maxLength = 50;
+                                if (descriptionInput.value.length > maxLength) {
+                                    alert('Description should not exceed 50 characters');
+                                    descriptionInput.value = descriptionInput.value.substring(0, maxLength);
+                                }
+                            });
+                        });
+                    </script>
                 </form>
+
             </div>
 
             <div class="col-md-12" style="padding-top:20px;">
@@ -72,9 +111,9 @@ $result = isset($_GET['result']) ? $_GET['result'] : null;
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($reclamations as $reclamation) { 
-                            $subject_name=$subjectC->getSubject($reclamation['Subject']);
-                            ?>
+                        <?php foreach ($reclamations as $reclamation) {
+                            $subject_name = $subjectC->getSubject($reclamation['Subject']);
+                        ?>
                             <tr>
                                 <td><?= htmlspecialchars($reclamation['id']); ?></td>
                                 <td><?= htmlspecialchars($reclamation['Type']); ?></td>
@@ -82,7 +121,7 @@ $result = isset($_GET['result']) ? $_GET['result'] : null;
                                 <td><?= htmlspecialchars($reclamation['description']); ?></td>
                                 <td>
                                     <a href="update-reclamation.php?id=<?= $reclamation['id']; ?>" class="btn btn-primary">Update</a>
-                                    <a href="../../../../Model/delete_reclamation.php?id=<?= $reclamation['id']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this reclamation?');">Delete</a>
+                                    <a href="../../Model/delete_reclamation.php?id=<?= $reclamation['id']; ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this reclamation?');">Delete</a>
                                 </td>
                             </tr>
                         <?php }; ?>

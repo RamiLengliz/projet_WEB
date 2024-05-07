@@ -27,10 +27,10 @@ if (isset($_POST['id'])) {
             );
 
             $result = $reclamationC->updateReclamation($reclamation, $id);
-            header('Location: ../View/etudiant/dreamslms.dreamstechnologies.com/html/add-reclamation.php?page=CR&result=1');  
+            header('Location: ../view/etudiant/add-reclamation.php?page=CR&result=1');  
             exit;  
         } else {
-            header('Location: ../View/etudiant/dreamslms.dreamstechnologies.com/html/add-reclamation.php?page=CR&result=3'); 
+            header('Location: ../view/etudiant/add-reclamation.php?page=CR&result=3'); 
             exit;
         }
     }

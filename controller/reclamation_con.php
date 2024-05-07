@@ -34,15 +34,16 @@ class reclamationCon {
         }
     }
 
-    function addReclamation($reclamation) {
-        $sql = "INSERT INTO $this->tab_name (type, subject, description) VALUES (:type, :subject, :description)";
+    function addReclamation($reclamation,$id_user) {
+        $sql = "INSERT INTO $this->tab_name (type, subject, description,id_user) VALUES (:type, :subject, :description,:id_user)";
         $db = config::getConnexion();
         try {
             $query = $db->prepare($sql);
             $query->execute([
                 'type' => $reclamation->getType(),
                 'subject' => $reclamation->getSubject(),
-                'description' => $reclamation->getDescription()
+                'description' => $reclamation->getDescription(),
+                'id_user' => $id_user
             ]);
         } catch (Exception $e) {
             echo 'Error: ' . $e->getMessage();

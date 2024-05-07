@@ -20,10 +20,11 @@ if (
             $_POST['type'],
             $_POST['subject'],
             $_POST['description']
+            
         );
 
-        $reclamationC->addReclamation($reclamation);
-        header('Location: ../View/etudiant/dreamslms.dreamstechnologies.com/html/add-reclamation.php?page=CR&result=1');  
+        $reclamationC->addReclamation($reclamation,$_POST['id_user']);
+        header('Location: ../view/etudiant/add-reclamation.php?page=CR&result=1');  
     } else {
         header('Location: ../View/index.php?page=CR&result=4');  
         exit;

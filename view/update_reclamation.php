@@ -1,7 +1,7 @@
 <?php
-include '../../../../Controller/reclamation_con.php';
-require_once '../../../../model/reclamation.php';
-include '../../../../Controller/subject_con.php';
+include '../../Controller/reclamation_con.php';
+require_once '../../model/reclamation.php';
+include '../../Controller/subject_con.php';
 
 $reclamationC = new reclamationCon("reclamation");
 $reclamations = $reclamationC->listReclamations();
@@ -41,7 +41,7 @@ $subjects = $subjectC->listsubjects();
                 }
                 ?>
 
-                <form action="../../../../Model/update_reclamation.php" method="post" style="max-width: 100rem; padding: 20px; margin-bottom: 20px; border: 1px solid #ccc; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                <form action="../../Model/update_reclamation.php" method="post" style="max-width: 100rem; padding: 20px; margin-bottom: 20px; border: 1px solid #ccc; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
                     <input type="hidden" name="id" value="<?= $id; ?>">
                     <h5>Update Reclamation</h5>
                     <div class="form-group">
