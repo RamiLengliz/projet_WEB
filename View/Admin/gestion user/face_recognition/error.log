@@ -1,0 +1,17 @@
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 299-020-067
+127.0.0.1 - - [23/May/2024 15:32:18] "OPTIONS /save-photo HTTP/1.1" 200 -
+127.0.0.1 - - [23/May/2024 15:32:18] "POST /save-photo HTTP/1.1" 200 -
+127.0.0.1 - - [23/May/2024 15:32:18] "POST /save-photo HTTP/1.1" 200 -
+127.0.0.1 - - [23/May/2024 15:32:48] "OPTIONS /save-photo HTTP/1.1" 200 -
+127.0.0.1 - - [23/May/2024 15:32:48] "POST /save-photo HTTP/1.1" 200 -
+127.0.0.1 - - [23/May/2024 15:33:07] "OPTIONS /save-photo HTTP/1.1" 200 -
+127.0.0.1 - - [23/May/2024 15:33:07] "POST /save-photo HTTP/1.1" 200 -
+127.0.0.1 - - [23/May/2024 15:33:15] "OPTIONS /save-photo HTTP/1.1" 200 -
+127.0.0.1 - - [23/May/2024 15:33:16] "POST /save-photo HTTP/1.1" 200 -
+127.0.0.1 - - [23/May/2024 15:33:53] "OPTIONS /save-photo HTTP/1.1" 200 -
+127.0.0.1 - - [23/May/2024 15:33:53] "POST /save-photo HTTP/1.1" 200 -
